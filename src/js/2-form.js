@@ -33,10 +33,18 @@ const onFormFieldInput = event => {
 
 const onFeedbackFormSubmit = event => {
   event.preventDefault();
+  if (
+    feedbackFormEl.elements.email.value.trim() === '' ||
+    feedbackFormEl.elements.message.value.trim() === ''
+  ) {
+    alert('Fill all fields');
+    return;
+  }
 
+  console.log(formData);
   event.target.reset();
   localStorage.removeItem('feedback-form');
+  formData = { email: '', message: '' };
 };
-
 feedbackFormEl.addEventListener('input', onFormFieldInput);
 feedbackFormEl.addEventListener('submit', onFeedbackFormSubmit);
