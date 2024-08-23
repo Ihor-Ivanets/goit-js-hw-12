@@ -7,17 +7,22 @@
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <nav class="navigation">
-      <ul class="navigation-list">
-        <li class="navigation-list-item">
-          <a class="navigation-list-item-link" href="./1-timer.html">Timer</a>
-        </li>
-        <li class="navigation-list-item">
-          <a class="navigation-list-item-link" href="./2-snackbar.html"
-            >Snackbar</a
-          >
-        </li>
-      </ul>
-    </nav>
+    <section class="gallery-section">
+      <div class="container">
+        <form class="search-form js-search-form">
+          <input
+            class="search-input js-search-input"
+            type="text"
+            name="user_query"
+            required
+            placeholder="Search images..."
+          />
+          <button class="search-btn" type="submit">Search</button>
+        </form>
+        <span class="loader js-loader is-hidden"></span>
+        <ul class="gallery js-gallery"></ul>
+      </div>
+    </section>
+    <script type="module" src="./main.js"></script>
   </body>
 </html>
