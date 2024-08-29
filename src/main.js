@@ -12,12 +12,18 @@ let currentPage = 1;
 let searchValue = '';
 let cardHeight = 0;
 
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionDelay: 250,
+  captionPosition: 'bottom',
+  captionsData: 'alt',
+});
+
 const onSearchFormSubmit = async e => {
   try {
     e.preventDefault();
     loaderEl.classList.remove('is-hidden');
 
-    searchValue = searchFormEl.elements.user_query.value;
+    searchValue = searchFormEl.elements.user_query.value.trim();
 
     currentPage = 1;
 
@@ -32,15 +38,14 @@ const onSearchFormSubmit = async e => {
         iconColor: '#fafafb',
       });
 
+      loadmoreEl.classList.add('is-hidden');
       galleryEl.innerHTML = '';
       searchFormEl.reset();
       return;
     }
-
     const galleryCardsTemplate = response.data.hits
       .map(imgDetails => createGalleryCard(imgDetails))
       .join('');
-
     galleryEl.innerHTML = galleryCardsTemplate;
     cardHeight = galleryEl.querySelector('li').getBoundingClientRect().height;
 
@@ -58,19 +63,19 @@ const OnLoadMoreBtnClick = async event => {
   try {
     currentPage++;
     const response = await fetchPhotos(searchValue, currentPage);
-    console.log(response);
     const galleryCardsTemplate = response.data.hits
       .map(imgDetails => createGalleryCard(imgDetails))
       .join('');
 
     galleryEl.insertAdjacentHTML('beforeend', galleryCardsTemplate);
+    lightbox.refresh();
 
     scrollBy({
       top: cardHeight * 2,
       behavior: 'smooth',
     });
 
-    if (currentPage === Math.trunc(response.data.total / 15)) {
+    if (currentPage === Math.trunc(response.data.totalHits / 15)) {
       loadmoreEl.classList.add('is-hidden');
       iziToast.info({
         message: `We're sorry, but you've reached the end of search results.`,
@@ -84,9 +89,3 @@ const OnLoadMoreBtnClick = async event => {
 
 searchFormEl.addEventListener('submit', onSearchFormSubmit);
 loadmoreEl.addEventListener('click', OnLoadMoreBtnClick);
-
-const lightbox = new SimpleLightbox('.gallery a', {
-  captionDelay: 250,
-  captionPosition: 'bottom',
-  captionsData: 'alt',
-});
