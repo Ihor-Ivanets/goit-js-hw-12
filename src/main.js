@@ -11,6 +11,7 @@ const loadmoreEl = document.querySelector('.js-load-more');
 let currentPage = 1;
 let searchValue = '';
 let cardHeight = 0;
+let totalPages = 0;
 
 const lightbox = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
@@ -60,6 +61,13 @@ const onSearchFormSubmit = async e => {
     galleryEl.innerHTML = galleryCardsTemplate;
     cardHeight = galleryEl.querySelector('li').getBoundingClientRect().height;
 
+    totalPages = Math.ceil(response.data.totalHits / 15);
+    if (currentPage >= totalPages) {
+      iziToast.info({
+        message: `We're sorry, but you've reached the end of search results.`,
+        position: 'topRight',
+      });
+    }
     loadmoreEl.classList.remove('is-hidden');
     lightbox.refresh();
   } catch (err) {
@@ -86,7 +94,7 @@ const OnLoadMoreBtnClick = async event => {
       behavior: 'smooth',
     });
 
-    const totalPages = Math.ceil(response.data.totalHits / 15);
+    totalPages = Math.ceil(response.data.totalHits / 15);
 
     if (currentPage >= totalPages) {
       loadmoreEl.classList.add('is-hidden');
