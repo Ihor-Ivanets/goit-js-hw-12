@@ -25,6 +25,17 @@ const onSearchFormSubmit = async e => {
 
     searchValue = searchFormEl.elements.user_query.value.trim();
 
+    if (!searchValue) {
+      iziToast.error({
+        message: 'Enter what we are looking for',
+        position: 'topRight',
+        backgroundColor: '#EF4040',
+        messageColor: '#fafafb',
+        iconColor: '#fafafb',
+      });
+      return;
+    }
+
     currentPage = 1;
 
     const response = await fetchPhotos(searchValue, currentPage);
@@ -75,7 +86,9 @@ const OnLoadMoreBtnClick = async event => {
       behavior: 'smooth',
     });
 
-    if (currentPage === Math.trunc(response.data.totalHits / 15)) {
+    const totalPages = Math.ceil(response.data.totalHits / 15);
+
+    if (currentPage >= totalPages) {
       loadmoreEl.classList.add('is-hidden');
       iziToast.info({
         message: `We're sorry, but you've reached the end of search results.`,
